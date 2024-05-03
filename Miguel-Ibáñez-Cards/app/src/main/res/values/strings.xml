@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Cards</string>
+    <string name="deck_name">Deck name</string>
+    <string name="quality">Quality</string>
+    <string name="easiness">Easiness</string>
+    <string name="repetitions">Repetitions</string>
+    <string name="cards_left">Number of cards left</string>
+    <string name="no_cards">There are no more cards to study</string>
+    <string name="view_answer">View Answer</string>
+    <string name="add_card_button_title">Accept</string>
+    <string name="list_cards">LIST OF CARDS</string>
+    <string name="list_decks">LIST OF DECKS</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="question">Card question</string>
+    <string name="answer">Card answer</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit_cancel">edit cancelled</string>
+    <string name="description">Description</string>
+    <string name="selected">Selected</string>
+    <string name="updated">updated</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign">Sign In</string>
+    <string name="create">Create Account</string>
+</resources>

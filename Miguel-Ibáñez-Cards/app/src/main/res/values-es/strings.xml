@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tarjetas</string>
+    <string name="deck_name">Nombre del Contenedor</string>
+    <string name="quality">Calidad</string>
+    <string name="easiness">Facilidad</string>
+    <string name="repetitions">Repeticiones</string>
+    <string name="cards_left">Numero de cartas restantes</string>
+    <string name="no_cards">No quedan cartas por estudiar</string>
+    <string name="view_answer">No quedan cartas por estudiar</string>
+    <string name="add_card_button_title">Aceptar</string>
+    <string name="list_cards">LISTA DE CARTAS</string>
+    <string name="list_decks">LISTA DE BARAJAS</string>
+    <string name="easy">Fácil</string>
+    <string name="medium">Medio</string>
+    <string name="hard">Difícil</string>
+    <string name="question">Pregunta de la carta</string>
+    <string name="answer">Respuesta de la carta</string>
+    <string name="cancel">Cancelar</string>
+    <string name="edit_cancel">Edición cancelada</string>
+    <string name="description">Descripción</string>
+    <string name="selected">Seleccionado</string>
+    <string name="updated">actualizado</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="sign">Entrar</string>
+    <string name="create">Crear Cuenta</string>
+</resources>

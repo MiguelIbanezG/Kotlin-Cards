@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import es.uam.eps.dadm.cards.Card
 import es.uam.eps.dadm.cards.Deck
+import es.uam.eps.dadm.cards.Review
 
 @Dao
 interface CardDao {
@@ -15,6 +16,10 @@ interface CardDao {
 
     @Query("SELECT * FROM decks_table")
     fun getDecks(): LiveData<List<Deck>>
+
+
+    @Query("SELECT * FROM review_table")
+    fun getReviews(): LiveData<List<Review>>
 
     @Query("SELECT * FROM cards_table WHERE id = :cardId")
     fun getCard(cardId: String) : LiveData<Card>
@@ -48,12 +53,15 @@ interface CardDao {
     @Query("DELETE FROM decks_table")
     suspend fun deleteDecks()
 
+    @Query("DELETE FROM decks_table WHERE deckId = :deckId")
+    fun deleteDeckById(deckId: String)
+
+    @Query("DELETE FROM cards_table WHERE id = :id")
+    fun deleteCardById(id: String)
+
     @Query("SELECT * FROM cards_table " +
             "JOIN decks_table ON cards_table.deckId = decks_table.deckId")
     fun getCardsAndDecks(): LiveData<Map<Deck, List<Card>>>
-
-    @Query("DELETE FROM cards_table")
-    suspend fun deleteAllCards()
 
     @Insert
     suspend fun insertCards(cards: List<Card>)
@@ -66,6 +74,9 @@ interface CardDao {
 
     @Query("SELECT * FROM cards_table WHERE userId = :userId AND deckId = :deckId")
     fun getCardsFromDeckAndUser(userId: String, deckId: String): LiveData<List<Card>>
+
+    @Insert
+    suspend fun addReview(review: Review)
 
 
 

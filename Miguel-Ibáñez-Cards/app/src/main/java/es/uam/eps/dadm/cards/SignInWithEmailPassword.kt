@@ -51,8 +51,9 @@ fun EmailPassword(navController: NavController, viewModel: CardViewModel) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    SettingsActivity.setLoggedIn(context, true)
                     val user = auth.currentUser
-                    navController.navigate(NavRoutes.Cards.route)
+                    navController.navigate(NavRoutes.CardScaffold.route)
                 } else {
                     Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
@@ -64,7 +65,7 @@ fun EmailPassword(navController: NavController, viewModel: CardViewModel) {
             .addOnCompleteListener(context)  { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    navController.navigate(NavRoutes.Cards.route)
+                    navController.navigate(NavRoutes.CardScaffold.route)
                 } else {
                     Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }

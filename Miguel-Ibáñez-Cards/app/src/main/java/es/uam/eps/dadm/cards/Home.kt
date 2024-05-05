@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
@@ -29,11 +30,11 @@ fun Home(navController: NavController, viewModel: CardViewModel) {
                     if (viewModel.userId == "unknown user") {
                         navController.navigate(NavRoutes.Login.route)
                     } else
-                        navController.navigate(NavRoutes.Cards.route)
+                        navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}")
                 },
                 colors = ButtonDefaults.buttonColors(Color.Black)
             ) {
-                Text("CARDS")
+                Text(stringResource(id = R.string.cards))
             }
         }
     }

@@ -7,7 +7,7 @@
     <string name="repetitions">Repeticiones</string>
     <string name="cards_left">Numero de cartas restantes</string>
     <string name="no_cards">No quedan cartas por estudiar</string>
-    <string name="view_answer">No quedan cartas por estudiar</string>
+    <string name="view_answer">Ver Respuesta</string>
     <string name="add_card_button_title">Aceptar</string>
     <string name="list_cards">LISTA DE CARTAS</string>
     <string name="list_decks">LISTA DE BARAJAS</string>
@@ -24,5 +24,13 @@
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="sign">Entrar</string>
+    <string name="title_activity_settings">Ajustes</string>
     <string name="create">Crear Cuenta</string>
+    <string name="cards">Cartas</string>
+    <string name="decks">Barajas</string>
+    <string name="max_cards">Maximo numero de cartas</string>
+    <string name="board_title">Mostrar tablero</string>
+    <string name="board_summary_on">Tablero disponible</string>
+    <string name="board_summary_off">Tablero no disponible</string>
+    <string name="noStatistics">No hay estadísticas ya que no has estudiado ninguna carta</string>
 </resources>

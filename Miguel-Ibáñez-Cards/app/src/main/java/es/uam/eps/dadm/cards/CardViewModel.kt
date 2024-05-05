@@ -14,14 +14,21 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import es.uam.eps.dadm.cards.database.CardDao
 import es.uam.eps.dadm.cards.database.CardDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+import java.util.UUID
 
 class CardViewModel(application: Application) : ViewModel() {
     val cards: LiveData<List<Card>>
     val decks: LiveData<List<Deck>>
+    val review: LiveData<List<Review>>
+
     val dueCard: LiveData<Card?>
     val nDueCards: LiveData<Int>
+
+
     private val cardDao: CardDao
     var userId = Firebase.auth.currentUser?.uid
         ?: "unknown user"
@@ -48,17 +55,23 @@ class CardViewModel(application: Application) : ViewModel() {
 
         cards = cardDao.getCards()
         decks = cardDao.getDecks()
+        review = cardDao.getReviews()
 
         dueCard = cards.map {
             it.filter { card -> card.isDue(LocalDateTime.now()) }.run {
                 if (any()) random() else null
             }
         }
+
         nDueCards = cards.map { cards -> cards.count { card -> card.isDue(LocalDateTime.now()) } }
     }
 
     fun addCard(card: Card) = viewModelScope.launch {
         cardDao.addCard(card)
+    }
+
+    fun addReview(review: Review) = viewModelScope.launch {
+        cardDao.addReview(review)
     }
 
     private fun deleteCards() = viewModelScope.launch {
@@ -73,6 +86,23 @@ class CardViewModel(application: Application) : ViewModel() {
 
     fun getDeck(deckId: String) = cardDao.getDeck(deckId)
 
+    fun deleteDeckById(deckId: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                cardDao.deleteDeckById(deckId)
+            }
+        }
+    }
+
+    fun deleteCardById(id: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                cardDao.deleteCardById(id)
+            }
+        }
+    }
+
+
     fun updateCard(card: Card) = viewModelScope.launch {
         cardDao.updateCard(card)
     }
@@ -81,6 +111,7 @@ class CardViewModel(application: Application) : ViewModel() {
         card.quality = quality
         card.update(LocalDateTime.now())
         updateCard(card)
+        addReview(Review(deckId = card.deckId, cardId = card.id, userId = card.userId, reviewDate = card.date, nextReviewDate = card.nextPresentationDate, repetitions = card.repetitions))
     }
 
     fun updateDeck(deck: Deck) {
@@ -106,7 +137,7 @@ class CardViewModel(application: Application) : ViewModel() {
                 }
                 viewModelScope.launch {
                     // Clear previous data
-                    cardDao.deleteAllCards()
+                    cardDao.deleteCards()
 
                     // Insert new cards
                     cardDao.insertCards(cards)
@@ -129,6 +160,8 @@ class CardViewModel(application: Application) : ViewModel() {
     fun getCardsOfDeck(deckId: String) = cardDao.getCardsOfDeck(deckId)
 
     fun getCardsAndDecks() = cardDao.getCardsAndDecks()
+
+    fun getReviews() = cardDao.getReviews()
 
 }
 

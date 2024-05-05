@@ -20,8 +20,16 @@
     <string name="description">Description</string>
     <string name="selected">Selected</string>
     <string name="updated">updated</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign">Sign In</string>
     <string name="create">Create Account</string>
+    <string name="cards">Cards</string>
+    <string name="decks">Decks</string>
+    <string name="max_cards">Maximun number of cards</string>
+    <string name="board_title">Show Board</string>
+    <string name="board_summary_on">Board available</string>
+    <string name="board_summary_off">Board unavailable</string>
+    <string name="noStatistics">There are no statistics since you have not studied any cards</string>
 </resources>

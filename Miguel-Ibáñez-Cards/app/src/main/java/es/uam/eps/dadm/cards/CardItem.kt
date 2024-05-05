@@ -1,8 +1,10 @@
 package es.uam.eps.dadm.cards
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,18 +12,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -90,7 +100,7 @@ fun CardData(
             if (switchState) {
 
                 Text(stringResource(id = R.string.quality) + ": " + card.quality.toString())
-                Text(stringResource(id = R.string.easiness) + ": " + card.easiness.toString())
+                Text(stringResource(id = R.string.easiness) + ": " + String.format("%.2f", card.easiness))
                 Text(stringResource(id = R.string.repetitions) + ": " + card.repetitions.toString())
             }
         }
@@ -168,6 +178,7 @@ fun CardView(viewModel: CardViewModel, card: Card) {
 @Composable
 fun Study(viewModel: CardViewModel, navController: NavController) {
     val card by viewModel.dueCard.observeAsState()
+    println(card)
     val ncard by viewModel.nDueCards.observeAsState()
 
     Column(
@@ -181,7 +192,7 @@ fun Study(viewModel: CardViewModel, navController: NavController) {
             fontFamily = FontFamily.Serif,
             fontSize = 18.sp
         )
-        Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 60.dp))
+        Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 40.dp))
         Spacer(modifier = Modifier.height(50.dp))
         card?.let {
             CardView(viewModel = viewModel, it)
@@ -209,22 +220,19 @@ fun ViewAnswerButton( onClick: () -> Unit, onValueChange: (Boolean) -> Unit) {
 }
 
 @Composable
-fun CardList(viewModel: CardViewModel, navController: NavController) {
-    val cards by viewModel.cards.observeAsState(listOf())
+fun CardList(viewModel: CardViewModel, navController: NavController, deckId: String) {
+    val cards by viewModel.getCardsOfDeck(deckId).observeAsState(listOf())
     val context = LocalContext.current
 
     val onItemClick = { card: Card ->
-        navController.navigate(
-            NavRoutes.CardEditor.route + "/${card.id}" + "/${card.deckId}"
-        )
+        val id = "adding card"
+        navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/${card.id}" + "/${card.deckId}")
     }
 
-    val all by viewModel.getCardsAndDecks().observeAsState()
+    val all by viewModel.getCardsOfDeck(deckId).observeAsState()
     all?.let { it ->
-        it.forEach { (deck, cards) ->
-            println(deck.name)
-            cards.forEach { println(it.question) }
-        }
+        it.forEach { card ->
+            println(card.question) }
     }
 
     LazyColumn {
@@ -237,12 +245,71 @@ fun CardList(viewModel: CardViewModel, navController: NavController) {
                 fontFamily = FontFamily.Serif,
                 fontSize = 22.sp
             )
+            Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 40.dp))
             Spacer(modifier = Modifier.height(20.dp))
         }
         items(cards) { card ->
-            CardItem(card = card, onItemClick = onItemClick)
+            DeleteOrOpenCards(navController, viewModel, card, deckId, onItemClick)
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeleteOrOpenCards(navController: NavController, viewModel: CardViewModel, card: Card, deckId: String, onItemClick: (Card) -> Unit) {
+
+    val state = rememberSwipeToDismissBoxState()
+
+    LaunchedEffect(state.currentValue) {
+        when (state.currentValue) {
+            SwipeToDismissBoxValue.StartToEnd -> {
+                viewModel.deleteCardById(card.id)
+                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${deckId}")
+            }
+            SwipeToDismissBoxValue.EndToStart -> {
+                viewModel.deleteCardById(card.id)
+                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${deckId}")
+            }
+            else -> Unit
+        }
+    }
+
+    SwipeToDismissBox(
+        state = state,
+        backgroundContent = {
+            val color = when (state.targetValue) {
+                SwipeToDismissBoxValue.StartToEnd -> Color.Red
+                SwipeToDismissBoxValue.EndToStart -> Color.Red
+                else -> Color.Transparent
+            }
+            Box(Modifier.fillMaxSize().background(color)){
+                if (state.targetValue == SwipeToDismissBoxValue.StartToEnd) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        modifier = Modifier.padding(end = 16.dp)
+                            .size(36.dp)
+                    )
+                }
+                if (state.targetValue == SwipeToDismissBoxValue.EndToStart) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                }
+            }
+        },
+
+    ) {
+        CardItem(card = card, onItemClick)
+    }
+
 }
 
 @Composable
@@ -283,27 +350,12 @@ fun CardListScreen(
     navController: NavController,
     deckId: String
 ) {
-    val emptyCardId = UUID.randomUUID().toString()
     val onAddCard = {
         navController.navigate(
-            NavRoutes.CardEditor.route
-                    + "/${emptyCardId}"
+            NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/adding card"
                     + "/${deckId}"
         )
 
-    }
-    Column(modifier = Modifier.fillMaxSize()) {
-
-        CardList(viewModel, navController = navController)
-
-        FloatingActionButton(
-            onClick = onAddCard,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.End)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = "Add Card")
-        }
     }
 }
 
@@ -314,7 +366,7 @@ fun CardEditor(
     cardId: String = "",
     deckId: String = ""
 ) {
-    if (cardId == "adding card")
+    if (cardId.equals("adding card"))
         InnerCardEditor(
             navController = navController,
             viewModel = viewModel,
@@ -343,7 +395,7 @@ fun InnerCardEditor(
         val onQuestionChanged = { value: String -> question = value }
         val onAnswerChanged = { value: String -> answer = value }
         val context = LocalContext.current
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.height(170.dp))
         OutlinedTextField(
             value = question,
             onValueChange = onQuestionChanged,
@@ -368,12 +420,12 @@ fun InnerCardEditor(
             val onAcceptClicked: () -> Unit = {
                 card.question = question
                 card.answer = answer
-                if (card.id == "adding card") {
+                if (card.id.equals("adding card")) {
                     card.id = UUID.randomUUID().toString()
                     viewModel.addCard(card)
                 } else
                     viewModel.updateCard(card)
-                navController.navigate(NavRoutes.Cards.route)
+                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${card.deckId}")
             }
             Button(onClick = onAcceptClicked,
                    colors = ButtonDefaults.buttonColors(Color.Black)
@@ -386,7 +438,7 @@ fun InnerCardEditor(
                 onClick = {
                     val message = "$question " + context.getString(R.string.cancel)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    navController.navigate(NavRoutes.Cards.route) {
+                    navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${card.deckId}") {
                         popUpTo(NavRoutes.Home.route)
                     }
                 },

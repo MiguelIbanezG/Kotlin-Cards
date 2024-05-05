@@ -1,5 +1,7 @@
 package es.uam.eps.dadm.cards
 
+import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +30,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,13 +42,23 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardScaffold(viewModel: CardViewModel, navController: NavController) {
+fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId: String="", cardId: String="", currentRoute: String) {
     val cards by viewModel.cards.observeAsState()
+    val decks by viewModel.decks.observeAsState()
+
+    val context = LocalContext.current
     Scaffold(
 
         content = { paddingValues ->
             Column(Modifier.padding(paddingValues)) {
-                CardList(viewModel = viewModel, navController)
+                when (currentRoute) {
+                    NavRoutes.Cards.route -> CardList(navController = navController, viewModel = viewModel, deckId = deckId)
+                    NavRoutes.CardEditor.route -> CardEditor(navController, viewModel = viewModel, cardId = cardId)
+                    NavRoutes.Decks.route -> DeckListScreen(viewModel = viewModel, navController)
+                    NavRoutes.DeckEditor.route -> DeckEditor(navController, viewModel = viewModel, deckId = deckId)
+                    NavRoutes.Statistics.route -> Statistics(navController = navController, viewModel = viewModel)
+                    NavRoutes.Study.route -> Study(viewModel = viewModel, navController = navController)
+                }
             }
         },
         topBar = {
@@ -54,9 +69,22 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                 )
-            }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = Color.Black
-            ), actions = {
+            },
+            navigationIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    contentDescription = "Settings",
+                    modifier = Modifier
+                        .clickable {
+                            context?.startActivity(Intent(context, SettingsActivity::class.java))
+                        }
+                        .padding(8.dp)
+                )
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Black
+            ),
+            actions = {
                 Row {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowUp,
@@ -66,9 +94,8 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController) {
                             }
                             .padding(8.dp),
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = "Settings",
+                        contentDescription = "Upload  Firebase",
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // Agregamos un espacio entre los iconos
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         modifier = Modifier
@@ -79,7 +106,6 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController) {
                         tint = MaterialTheme.colorScheme.onPrimary,
                         contentDescription = "Download from Firebase",
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // Agregamos un espacio entre los iconos
                     Icon(
                         imageVector = Icons.Filled.ExitToApp,
                         modifier = Modifier
@@ -88,23 +114,34 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController) {
                             }
                             .padding(8.dp),
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = "Download from Firebase",
+                        contentDescription = "Exit",
                     )
                 }
             })
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(NavRoutes.CardEditor.route)
-                },
-                containerColor = Color.Black
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add card",
-                    tint = Color.White
-                )
+            if (currentRoute == NavRoutes.Decks.route || currentRoute == NavRoutes.Cards.route) {
+                FloatingActionButton(
+                    onClick = {
+                        if (currentRoute == NavRoutes.Decks.route) {
+                            val idDeck = "adding deck"
+                            val routeDeck = NavRoutes.CardScaffold.route + "/${NavRoutes.DeckEditor.route}" + "/${idDeck}"
+                            navController.navigate(routeDeck)
+
+                        } else {
+                            val id = "adding card"
+                            val route = NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/${id}" + "/${deckId}"
+                            navController.navigate(route)
+                        }
+                    },
+                    containerColor = Color.Black
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add card",
+                        tint = Color.White
+                    )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End,

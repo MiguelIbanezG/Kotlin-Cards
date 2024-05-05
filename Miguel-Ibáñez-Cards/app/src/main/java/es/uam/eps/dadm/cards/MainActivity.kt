@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -29,6 +30,12 @@ class MainActivity : ComponentActivity() {
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
         val reference = database.getReference("message")
         reference.setValue("Hello from Cards")
+
+        PreferenceManager.setDefaultValues(
+            this,
+            R.xml.root_preferences,
+            false
+        )
 
         reference.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -86,28 +93,41 @@ class MainActivity : ComponentActivity() {
             composable(NavRoutes.Login.route) {
                 EmailPassword(navController, viewModel)
             }
-            composable(NavRoutes.Cards.route) {
-                CardScaffold(viewModel = viewModel , navController)
+            composable(NavRoutes.Statistics.route) {
+                CardScaffold(viewModel, navController, currentRoute =  NavRoutes.Statistics.route)
             }
             composable(NavRoutes.Decks.route) {
-                DeckListScreen(viewModel = viewModel, navController = navController)
+                CardScaffold(viewModel, navController, currentRoute =  NavRoutes.Decks.route)
             }
             composable(NavRoutes.Study.route) {
-                Study(viewModel = viewModel, navController = navController)
+                CardScaffold(viewModel, navController, currentRoute =  NavRoutes.Study.route)
             }
-            composable(NavRoutes.CardEditor.route + "/{cardId}") { backEntry ->
-                val id = backEntry.arguments?.getString("cardId")
-                id?.let {
-                    CardEditor(viewModel = viewModel, navController = navController, cardId = id)
+            composable(NavRoutes.CardScaffold.route + "/{currentRoute}" + "/{deckId}") { backEntry ->
+                val deckId = backEntry.arguments?.getString("deckId")
+                val currentRoute = backEntry.arguments?.getString("currentRoute") // Obtener currentRoute
+                deckId?.let { deckId ->
+                    currentRoute?.let { currentRoute ->
+                        CardScaffold(viewModel, navController, deckId, currentRoute =  currentRoute)
+                    }
                 }
             }
-            composable(NavRoutes.CardEditor.route + "/{cardId}" + "/{deckId}") { backEntry ->
-                val cardId = backEntry.arguments?.getString("cardId")
+
+            composable(NavRoutes.CardScaffold.route + "/{currentRoute}" + "/{cardId}" + "/{deckId}") { backEntry ->
                 val deckId = backEntry.arguments?.getString("deckId")
-                cardId?.let { cardId ->
-                    deckId?.let {
-                        CardEditor(navController, viewModel = viewModel, cardId = cardId, deckId = it)
+                val cardId = backEntry.arguments?.getString("cardId")
+                val currentRoute = backEntry.arguments?.getString("currentRoute") // Obtener currentRoute
+                deckId?.let { deckId ->
+                    currentRoute?.let { currentRoute ->
+                        cardId?.let { cardId ->
+                            CardScaffold(viewModel, navController, deckId, currentRoute =  currentRoute, cardId = cardId)
+                        }
                     }
+                }
+            }
+            composable(NavRoutes.CardScaffold.route + "/{currentRoute}") { backEntry ->
+                val currentRoute = backEntry.arguments?.getString("currentRoute") // Obtener currentRoute
+                currentRoute?.let { currentRoute ->
+                    CardScaffold(viewModel, navController, currentRoute =  currentRoute)
                 }
             }
 

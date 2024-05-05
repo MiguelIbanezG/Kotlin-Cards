@@ -1,6 +1,7 @@
 package es.uam.eps.dadm.cards
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PlayArrow
 
@@ -15,6 +16,11 @@ object NavBarItems {
             title = "Study",
             image = Icons.Filled.PlayArrow,
             route = "study"
+        ),
+        BarItem(
+            title = "Statistics",
+            image = Icons.Filled.DateRange,
+            route = "statistics"
         )
     )
 }

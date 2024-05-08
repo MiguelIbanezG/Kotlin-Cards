@@ -121,25 +121,21 @@ class CardViewModel(application: Application) : ViewModel() {
     }
 
     fun uploadToFirebase(cards: List<Card>) {
-        var reference = FirebaseDatabase.getInstance().getReference("cards")
+        val reference = FirebaseDatabase.getInstance().getReference("cards")
         reference.setValue(null)
         cards.forEach { reference.child(it.id).setValue(it) }
     }
     fun downloadFromFirebase() {
-        var reference = FirebaseDatabase.getInstance().getReference("cards")
+        val reference = FirebaseDatabase.getInstance().getReference("cards")
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val cards = mutableListOf<Card>()
-                snapshot.children.forEach {
+                snapshot.children.forEach { it ->
                     it.getValue(Card::class.java)?.let {
                         cards.add(it)
                     }
                 }
                 viewModelScope.launch {
-                    // Clear previous data
-                    cardDao.deleteCards()
-
-                    // Insert new cards
                     cardDao.insertCards(cards)
                 }
             }

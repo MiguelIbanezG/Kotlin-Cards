@@ -1,6 +1,8 @@
 package es.uam.eps.dadm.cards
 
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -53,7 +55,7 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
             Column(Modifier.padding(paddingValues)) {
                 when (currentRoute) {
                     NavRoutes.Cards.route -> CardList(navController = navController, viewModel = viewModel, deckId = deckId)
-                    NavRoutes.CardEditor.route -> CardEditor(navController, viewModel = viewModel, cardId = cardId)
+                    NavRoutes.CardEditor.route -> CardEditor(navController, viewModel = viewModel, cardId = cardId, deckId = deckId)
                     NavRoutes.Decks.route -> DeckListScreen(viewModel = viewModel, navController)
                     NavRoutes.DeckEditor.route -> DeckEditor(navController, viewModel = viewModel, deckId = deckId)
                     NavRoutes.Statistics.route -> Statistics(navController = navController, viewModel = viewModel)
@@ -94,7 +96,7 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                             }
                             .padding(8.dp),
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = "Upload  Firebase",
+                        contentDescription = "Download from Firebase",
                     )
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
@@ -127,7 +129,6 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                             val idDeck = "adding deck"
                             val routeDeck = NavRoutes.CardScaffold.route + "/${NavRoutes.DeckEditor.route}" + "/${idDeck}"
                             navController.navigate(routeDeck)
-
                         } else {
                             val id = "adding card"
                             val route = NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/${id}" + "/${deckId}"
@@ -138,7 +139,7 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Add card",
+                        contentDescription = context.getString(R.string.addCard),
                         tint = Color.White
                     )
                 }

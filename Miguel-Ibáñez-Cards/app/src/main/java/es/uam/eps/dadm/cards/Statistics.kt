@@ -31,7 +31,7 @@ fun Statistics(viewModel: CardViewModel, navController: NavController) {
         } else {
             val message = context.getString(R.string.noStatistics)
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            navController.navigate(NavRoutes.CardScaffold.route)
+            navController.navigate(NavRoutes.Home.route)
         }
     }
 }

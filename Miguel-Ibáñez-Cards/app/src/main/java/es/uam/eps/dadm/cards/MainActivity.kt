@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
                 deckId?.let { deckId ->
                     currentRoute?.let { currentRoute ->
                         cardId?.let { cardId ->
-                            CardScaffold(viewModel, navController, deckId, currentRoute =  currentRoute, cardId = cardId)
+                            CardScaffold(viewModel, navController, deckId = deckId, currentRoute =  currentRoute, cardId = cardId)
                         }
                     }
                 }

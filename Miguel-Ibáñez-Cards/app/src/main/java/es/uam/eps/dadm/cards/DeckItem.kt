@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -29,7 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -46,10 +45,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -88,8 +90,20 @@ fun DeckItem(
         }
         Column(verticalArrangement = Arrangement.Center) {
             val numberOfCardsInEnglishDeck = cards.filter { it.deckId == deck.deckId }.size
-            Text(
-                text = numberOfCardsInEnglishDeck.toString() + " " + context.getString(R.string.app_name),
+            ClickableText(
+                text = buildAnnotatedString {
+                    append("$numberOfCardsInEnglishDeck ")
+                    withStyle(style = SpanStyle(color = Color.Black)) {
+                        append(context.getString(R.string.app_name))
+                    }
+                },
+                onClick = {
+                    navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" +"/${deck.deckId}")
+                },
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
             )
             Icon(
                 imageVector = Icons.Filled.Menu,
@@ -99,7 +113,7 @@ fun DeckItem(
                     .clickable {
                         navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" +"/${deck.deckId}")
                     }
-                    .padding(0.dp).size(34.dp)
+                    .padding(start = 20.dp).size(34.dp).fillMaxWidth()
 
             )
         }
@@ -119,7 +133,12 @@ fun DeckListScreen(
 }
 
 @Composable
-fun DeckList(cards: List<Card>, decks: List<Deck>,navController: NavController, viewModel: CardViewModel) {
+fun DeckList(
+    cards: List<Card>,
+    decks: List<Deck>,
+    navController: NavController,
+    viewModel: CardViewModel
+) {
     val context = LocalContext.current
     val onDeckClick = { deck: Deck ->
         val message = deck.name + " " + context.getString(R.string.selected)
@@ -130,24 +149,29 @@ fun DeckList(cards: List<Card>, decks: List<Deck>,navController: NavController, 
         ).show()
         // navController.navigate(NavRoutes.DeckEditor.route + "/${deck.deckId}")
         navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.DeckEditor.route}" + "/${deck.deckId}")
-
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
-            Text( context.getString(R.string.list_decks),
-                Modifier.fillMaxWidth(),
+            Text(
+                text = context.getString(R.string.list_decks),
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif,
-                fontSize = 22.sp
+                fontSize = 22.sp,
+                color = Color.Black
             )
-            Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 40.dp))
-            Spacer(modifier = Modifier.height(20.dp))
+             Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(vertical = 20.dp))
         }
-        items(decks) {deck ->
+        items(decks) { deck ->
             DeleteOrOpenDeck(navController, viewModel, deck, cards, onDeckClick)
+            Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
         }
     }
 }
@@ -210,11 +234,11 @@ fun DeleteOrOpenDeck(navController: NavController, viewModel: CardViewModel, dec
 
 @Composable
 fun DeckEditor(navController: NavController ,viewModel: CardViewModel, deckId: String) {
-    if (deckId.equals("adding deck"))
+    if (deckId == "adding deck")
         InnerDeckEditor(
             navController = navController,
             viewModel = viewModel,
-            deck = Deck( "adding card", name = "", description = ""))
+            deck = Deck( "adding deck", name = "", description = ""))
     else {
         val deck by viewModel.getDeck(deckId).observeAsState(null)
         deck?.let {
@@ -236,7 +260,26 @@ fun InnerDeckEditor(navController: NavController ,viewModel: CardViewModel, deck
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(170.dp))
+        Spacer(modifier = Modifier.height(110.dp))
+
+        if(deck.deckId == "adding deck"){
+            Text(stringResource(id = R.string.addDeck), modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                fontSize = 22.sp,
+                color = Color.Black)
+        }else{
+            Text(stringResource(id = R.string.updateDeck),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                fontSize = 22.sp,
+                color = Color.Black)
+        }
+
+        Spacer(modifier = Modifier.height(60.dp))
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -262,13 +305,15 @@ fun InnerDeckEditor(navController: NavController ,viewModel: CardViewModel, deck
             val onAcceptClicked: () -> Unit = {
                 deck.name = name
                 deck.description = description
-                if (deck.deckId.equals("adding deck")) {
+                if (deck.deckId == "adding deck") {
                     deck.deckId = UUID.randomUUID().toString()
                     viewModel.addDeck(deck)
                 } else
                     viewModel.updateDeck(deck = deck)
 
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}")
+                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}"){
+                    popUpTo(NavRoutes.Home.route)
+                }
             }
             Button(
                 onClick = onAcceptClicked,

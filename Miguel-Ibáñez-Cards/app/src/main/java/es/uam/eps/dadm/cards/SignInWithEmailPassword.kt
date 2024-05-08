@@ -29,8 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -45,7 +49,7 @@ fun EmailPassword(navController: NavController, viewModel: CardViewModel) {
 
     val auth = FirebaseAuth.getInstance()
 
-    var context = LocalContext.current as Activity
+    val context = LocalContext.current as Activity
 
     val onSignInWithEmailAndPassword: () -> Unit = {
         auth.signInWithEmailAndPassword(email, password)
@@ -53,7 +57,7 @@ fun EmailPassword(navController: NavController, viewModel: CardViewModel) {
                 if (task.isSuccessful) {
                     SettingsActivity.setLoggedIn(context, true)
                     val user = auth.currentUser
-                    navController.navigate(NavRoutes.CardScaffold.route)
+                    navController.navigate(NavRoutes.Home.route)
                 } else {
                     Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
@@ -65,7 +69,7 @@ fun EmailPassword(navController: NavController, viewModel: CardViewModel) {
             .addOnCompleteListener(context)  { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    navController.navigate(NavRoutes.CardScaffold.route)
+                    navController.navigate(NavRoutes.Home.route)
                 } else {
                     Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
@@ -76,7 +80,17 @@ fun EmailPassword(navController: NavController, viewModel: CardViewModel) {
         modifier = Modifier
             .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.height(110.dp))
+
+        Text(stringResource(id = R.string.Login),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Serif,
+            fontSize = 22.sp,
+            color = Color.Black)
+
+        Spacer(modifier = Modifier.height(60.dp))
 
         OutlinedTextField(
             value = email,

@@ -1,5 +1,9 @@
+@file:Suppress("KotlinDeprecation", "KotlinDeprecation", "KotlinDeprecation", "KotlinDeprecation")
+
 package es.uam.eps.dadm.cards
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -65,10 +69,9 @@ fun CardItem(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(all = 5.dp)
-            .clickable {
-                onItemClick(card)
-            },
+            .padding(all = 5.dp).
+            clickable { onItemClick(card) },
+
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     )  {
@@ -230,26 +233,31 @@ fun CardList(viewModel: CardViewModel, navController: NavController, deckId: Str
     }
 
     val all by viewModel.getCardsOfDeck(deckId).observeAsState()
-    all?.let { it ->
+    all?.let {
         it.forEach { card ->
             println(card.question) }
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
             Text(stringResource(id = R.string.list_cards),
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif,
-                fontSize = 22.sp
+                fontSize = 22.sp,
+                color = Color.Black
             )
-            Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 40.dp))
-            Spacer(modifier = Modifier.height(20.dp))
+            Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(vertical = 20.dp))
         }
         items(cards) { card ->
             DeleteOrOpenCards(navController, viewModel, card, deckId, onItemClick)
+            Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
         }
     }
 }
@@ -345,28 +353,14 @@ fun DifficultyButtons(
 }
 
 @Composable
-fun CardListScreen(
-    viewModel: CardViewModel,
-    navController: NavController,
-    deckId: String
-) {
-    val onAddCard = {
-        navController.navigate(
-            NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/adding card"
-                    + "/${deckId}"
-        )
-
-    }
-}
-
-@Composable
 fun CardEditor(
     navController: NavController,
     viewModel: CardViewModel,
     cardId: String = "",
     deckId: String = ""
 ) {
-    if (cardId.equals("adding card"))
+    if (cardId == "adding card")
+
         InnerCardEditor(
             navController = navController,
             viewModel = viewModel,
@@ -395,7 +389,27 @@ fun InnerCardEditor(
         val onQuestionChanged = { value: String -> question = value }
         val onAnswerChanged = { value: String -> answer = value }
         val context = LocalContext.current
-        Spacer(modifier = Modifier.height(170.dp))
+        Spacer(modifier = Modifier.height(110.dp))
+
+        if(card.id == "adding card"){
+            Text(stringResource(id = R.string.addCard),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                fontSize = 22.sp,
+                color = Color.Black)
+        }else{
+            Text(stringResource(id = R.string.updateCard),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                fontSize = 22.sp,
+                color = Color.Black)
+        }
+
+        Spacer(modifier = Modifier.height(60.dp))
         OutlinedTextField(
             value = question,
             onValueChange = onQuestionChanged,
@@ -420,12 +434,15 @@ fun InnerCardEditor(
             val onAcceptClicked: () -> Unit = {
                 card.question = question
                 card.answer = answer
-                if (card.id.equals("adding card")) {
+                if (card.id == "adding card") {
                     card.id = UUID.randomUUID().toString()
                     viewModel.addCard(card)
-                } else
+                } else {
                     viewModel.updateCard(card)
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${card.deckId}")
+                }
+                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${card.deckId}"){
+                    popUpTo(NavRoutes.Home.route)
+                }
             }
             Button(onClick = onAcceptClicked,
                    colors = ButtonDefaults.buttonColors(Color.Black)

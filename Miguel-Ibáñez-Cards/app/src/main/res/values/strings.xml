@@ -27,9 +27,17 @@
     <string name="create">Create Account</string>
     <string name="cards">Cards</string>
     <string name="decks">Decks</string>
-    <string name="max_cards">Maximun number of cards</string>
+    <string name="max_cards">Maximum number of cards</string>
     <string name="board_title">Show Board</string>
     <string name="board_summary_on">Board available</string>
     <string name="board_summary_off">Board unavailable</string>
+    <string name="addCard">Add Card</string>
+    <string name="addDeck">Add Deck</string>
+    <string name="updateCard">Update Card</string>
+    <string name="updateDeck">Update Deck</string>
+    <string name="Login">Login / Create Account</string>
+    <string name="welcome">Welcome to Cards app</string>
+    <string name="view">View your containers</string>
+    <string name="uploadIconDescription">Upload firebase</string>
     <string name="noStatistics">There are no statistics since you have not studied any cards</string>
 </resources>

@@ -1,21 +1,15 @@
 package es.uam.eps.dadm.cards
 
-import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
-import co.yml.charts.axis.DataCategoryOptions
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.barchart.BarChart
 import co.yml.charts.ui.barchart.models.BarChartData
-import co.yml.charts.ui.barchart.models.BarChartType
-import co.yml.charts.ui.barchart.models.BarStyle
-import co.yml.charts.common.utils.DataUtils
 import co.yml.charts.ui.barchart.models.BarData
-import java.util.Locale
+import co.yml.charts.ui.barchart.models.BarStyle
 
 
 @Composable

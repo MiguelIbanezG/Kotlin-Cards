@@ -18,43 +18,25 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
-import java.util.UUID
 
 class CardViewModel(application: Application) : ViewModel() {
-    val cards: LiveData<List<Card>>
-    val decks: LiveData<List<Deck>>
+    var cards: LiveData<List<Card>>
+    var decks: LiveData<List<Deck>>
     val review: LiveData<List<Review>>
 
-    val dueCard: LiveData<Card?>
-    val nDueCards: LiveData<Int>
+    var dueCard: LiveData<Card?>
+    var nDueCards: LiveData<Int>
 
 
     private val cardDao: CardDao
     var userId = Firebase.auth.currentUser?.uid
         ?: "unknown user"
 
-
     init {
         cardDao = CardDatabase.getInstance(application.applicationContext).cardDao
 
-        deleteCards()
-        deleteDecks()
-
-        val english = Deck(name = "English", description = "Description of the English deck")
-        addDeck(english)
-        val french = Deck(name = "French", description = "Description of the French deck")
-        addDeck(french)
-
-
-        addCard(Card("To wake up", "Despertarse", deckId = english.deckId))
-        addCard(Card("To slow down", "Ralentizar", deckId = english.deckId))
-        addCard(Card("To give up", "Rendirse", deckId = english.deckId))
-        addCard(Card("To come up", "Acercarse", deckId = english.deckId))
-        addCard(Card("La voiture", "El coche", deckId = french.deckId))
-        addCard(Card("Le chien", "El perro", deckId = french.deckId))
-
-        cards = cardDao.getCards()
-        decks = cardDao.getDecks()
+        cards = cardDao.getCardsFromUser(userId)
+        decks = cardDao.getDecksFromUser(userId)
         review = cardDao.getReviews()
 
         dueCard = cards.map {
@@ -62,7 +44,20 @@ class CardViewModel(application: Application) : ViewModel() {
                 if (any()) random() else null
             }
         }
+        nDueCards = cards.map { cards -> cards.count { card -> card.isDue(LocalDateTime.now()) } }
 
+    }
+
+    fun refreshData() {
+        userId = Firebase.auth.currentUser?.uid
+            ?: "unknown user"
+        cards = cardDao.getCardsFromUser(userId)
+        decks = cardDao.getDecksFromUser(userId)
+        dueCard = cards.map {
+            it.filter { card -> card.isDue(LocalDateTime.now()) }.run {
+                if (any()) random() else null
+            }
+        }
         nDueCards = cards.map { cards -> cards.count { card -> card.isDue(LocalDateTime.now()) } }
     }
 
@@ -70,7 +65,7 @@ class CardViewModel(application: Application) : ViewModel() {
         cardDao.addCard(card)
     }
 
-    fun addReview(review: Review) = viewModelScope.launch {
+    private fun addReview(review: Review) = viewModelScope.launch {
         cardDao.addReview(review)
     }
 
@@ -102,7 +97,6 @@ class CardViewModel(application: Application) : ViewModel() {
         }
     }
 
-
     fun updateCard(card: Card) = viewModelScope.launch {
         cardDao.updateCard(card)
     }
@@ -125,6 +119,7 @@ class CardViewModel(application: Application) : ViewModel() {
         reference.setValue(null)
         cards.forEach { reference.child(it.id).setValue(it) }
     }
+
     fun downloadFromFirebase() {
         val reference = FirebaseDatabase.getInstance().getReference("cards")
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -151,13 +146,10 @@ class CardViewModel(application: Application) : ViewModel() {
         cardDao.addDeck(deck)
     }
 
-    fun getCardsByDeckName(deckName: String) = cardDao.getCardsByDeckName(deckName)
-
     fun getCardsOfDeck(deckId: String) = cardDao.getCardsOfDeck(deckId)
 
-    fun getCardsAndDecks() = cardDao.getCardsAndDecks()
+    fun getDeckNameByDeckId(deckId: String) = cardDao.getDeckNameByDeckId(deckId)
 
-    fun getReviews() = cardDao.getReviews()
 
 }
 

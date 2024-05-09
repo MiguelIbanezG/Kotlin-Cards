@@ -8,7 +8,7 @@ import es.uam.eps.dadm.cards.Card
 import es.uam.eps.dadm.cards.Deck
 import es.uam.eps.dadm.cards.Review
 
-@Database(entities = [Card::class, Deck::class, Review::class], version = 10, exportSchema = false)
+@Database(entities = [Card::class, Deck::class, Review::class], version = 11, exportSchema = false)
 abstract class CardDatabase: RoomDatabase() {
     abstract val cardDao: CardDao
 

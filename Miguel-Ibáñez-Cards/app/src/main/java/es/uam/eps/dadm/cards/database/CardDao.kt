@@ -75,6 +75,9 @@ interface CardDao {
     @Query("SELECT * FROM cards_table WHERE userId = :userId AND deckId = :deckId")
     fun getCardsFromDeckAndUser(userId: String, deckId: String): LiveData<List<Card>>
 
+    @Query("SELECT name FROM decks_table WHERE deckId = :deckId")
+    fun getDeckNameByDeckId(deckId: String): LiveData<String>
+
     @Insert
     suspend fun addReview(review: Review)
 

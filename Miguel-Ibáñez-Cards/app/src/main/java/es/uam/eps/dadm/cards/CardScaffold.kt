@@ -1,15 +1,10 @@
 package es.uam.eps.dadm.cards
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
@@ -32,21 +27,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId: String="", cardId: String="", currentRoute: String) {
     val cards by viewModel.cards.observeAsState()
     val decks by viewModel.decks.observeAsState()
+    FirebaseAuth.getInstance()
 
     val context = LocalContext.current
     Scaffold(
@@ -112,7 +107,9 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                         imageVector = Icons.Filled.ExitToApp,
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(NavRoutes.Login.route)
+                                FirebaseAuth.getInstance().signOut()
+                                viewModel.userId = "unknown user"
+                                navController.navigate(NavRoutes.Home.route)
                             }
                             .padding(8.dp),
                         tint = MaterialTheme.colorScheme.onPrimary,

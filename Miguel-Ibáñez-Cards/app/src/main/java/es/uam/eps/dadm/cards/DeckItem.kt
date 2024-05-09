@@ -1,6 +1,5 @@
 package es.uam.eps.dadm.cards
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,14 +19,11 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -238,7 +234,7 @@ fun DeckEditor(navController: NavController ,viewModel: CardViewModel, deckId: S
         InnerDeckEditor(
             navController = navController,
             viewModel = viewModel,
-            deck = Deck( "adding deck", name = "", description = ""))
+            deck = Deck( "adding deck", name = "", description = "", userId = viewModel.userId))
     else {
         val deck by viewModel.getDeck(deckId).observeAsState(null)
         deck?.let {

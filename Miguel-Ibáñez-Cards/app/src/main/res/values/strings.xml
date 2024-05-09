@@ -8,7 +8,7 @@
     <string name="no_cards">There are no more cards to study</string>
     <string name="view_answer">View Answer</string>
     <string name="add_card_button_title">Accept</string>
-    <string name="list_cards">LIST OF CARDS</string>
+    <string name="list_cards">LIST OF CARDS OF </string>
     <string name="list_decks">LIST OF DECKS</string>
     <string name="easy">Easy</string>
     <string name="medium">Medium</string>
@@ -19,13 +19,11 @@
     <string name="edit_cancel">edit cancelled</string>
     <string name="description">Description</string>
     <string name="selected">Selected</string>
-    <string name="updated">updated</string>
     <string name="title_activity_settings">Settings</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="sign">Sign In</string>
     <string name="create">Create Account</string>
-    <string name="cards">Cards</string>
     <string name="decks">Decks</string>
     <string name="max_cards">Maximum number of cards</string>
     <string name="board_title">Show Board</string>
@@ -38,6 +36,5 @@
     <string name="Login">Login / Create Account</string>
     <string name="welcome">Welcome to Cards app</string>
     <string name="view">View your containers</string>
-    <string name="uploadIconDescription">Upload firebase</string>
     <string name="noStatistics">There are no statistics since you have not studied any cards</string>
 </resources>

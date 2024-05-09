@@ -25,7 +25,7 @@ import es.uam.eps.dadm.cards.ui.theme.CardsTheme
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
         val reference = database.getReference("message")
@@ -65,13 +65,6 @@ class MainActivity : ComponentActivity() {
                             )
                         )
                         MainScreen(viewModel = viewModel)
-                        // CardScaffold(viewModel = viewModel)
-                        // Study(viewModel = viewModel)
-                        // CardList(viewModel = viewModel)
-                        // DeckList(viewModel = viewModel)
-
-                        // DeckEditor(viewModel = viewModel, deck = Deck(name = "Espgañol", description = "aa"))
-
                     }
                 }
             }

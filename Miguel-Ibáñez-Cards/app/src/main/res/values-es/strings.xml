@@ -9,7 +9,7 @@
     <string name="no_cards">No quedan cartas por estudiar</string>
     <string name="view_answer">Ver Respuesta</string>
     <string name="add_card_button_title">Aceptar</string>
-    <string name="list_cards">LISTA DE CARTAS</string>
+    <string name="list_cards">LISTA DE CARTAS DE </string>
     <string name="list_decks">LISTA DE MAZOS</string>
     <string name="easy">Fácil</string>
     <string name="medium">Medio</string>
@@ -20,13 +20,11 @@
     <string name="edit_cancel">Edición cancelada</string>
     <string name="description">Descripción</string>
     <string name="selected">Seleccionado</string>
-    <string name="updated">actualizado</string>
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
     <string name="sign">Entrar</string>
     <string name="title_activity_settings">Ajustes</string>
     <string name="create">Crear Cuenta</string>
-    <string name="cards">Cartas</string>
     <string name="decks">Mazos</string>
     <string name="max_cards">Máximo numero de cartas</string>
     <string name="board_title">Mostrar tablero</string>
@@ -39,6 +37,5 @@
     <string name="Login">Entrar / Crear Cuenta</string>ç
     <string name="welcome">Bienvenido a la Aplicación de Cartas</string>
     <string name="view">Ver Mazos</string>
-    <string name="uploadIconDescription">Subir firebase</string>
     <string name="noStatistics">No hay estadísticas ya que no has estudiado ninguna carta</string>
 </resources>

@@ -183,19 +183,22 @@ fun Study(viewModel: CardViewModel, navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(200.dp))
+
+        Spacer(modifier = Modifier.height(40.dp))
+        Text(fontSize = 24.sp, text = stringResource(id = R.string.study), fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold)
+        Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 60.dp, vertical = 5.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = stringResource(id = R.string.cards_left) + " = $ncard",
             fontFamily = FontFamily.Serif,
             fontSize = 18.sp
         )
-        Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(horizontal = 40.dp))
-        Spacer(modifier = Modifier.height(50.dp))
+
+        Spacer(modifier = Modifier.height(90.dp))
         card?.let {
             CardView(viewModel = viewModel, it)
         } ?: run {
             val context = LocalContext.current
-            Toast.makeText(context, stringResource(id = R.string.no_cards), Toast.LENGTH_SHORT).show()
         }
     }
 }
@@ -224,7 +227,7 @@ fun CardList(viewModel: CardViewModel, navController: NavController, deckId: Str
 
     val onItemClick = { card: Card ->
         val id = "adding card"
-        navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/${card.id}" + "/${card.deckId}")
+        navController.navigate(NavRoutes.CardEditor.route + "/${card.id}" + "/${card.deckId}")
     }
 
     val all by viewModel.getCardsOfDeck(deckId).observeAsState()
@@ -240,7 +243,7 @@ fun CardList(viewModel: CardViewModel, navController: NavController, deckId: Str
     ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
-            Text(stringResource(id = R.string.list_cards) + deckName,
+            Text(stringResource(id = R.string.list_cards) + " " + deckName,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
@@ -267,11 +270,11 @@ fun DeleteOrOpenCards(navController: NavController, viewModel: CardViewModel, ca
         when (state.currentValue) {
             SwipeToDismissBoxValue.StartToEnd -> {
                 viewModel.deleteCardById(card.id)
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${deckId}")
+                navController.navigate(NavRoutes.Cards.route + "/${deckId}")
             }
             SwipeToDismissBoxValue.EndToStart -> {
                 viewModel.deleteCardById(card.id)
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${deckId}")
+                navController.navigate(NavRoutes.Cards.route + "/${deckId}")
             }
             else -> Unit
         }
@@ -435,7 +438,7 @@ fun InnerCardEditor(
                 } else {
                     viewModel.updateCard(card)
                 }
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${card.deckId}"){
+                navController.navigate(NavRoutes.Cards.route + "/${card.deckId}"){
                     popUpTo(NavRoutes.Home.route)
                 }
             }
@@ -450,7 +453,7 @@ fun InnerCardEditor(
                 onClick = {
                     val message = "$question " + context.getString(R.string.cancel)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" + "/${card.deckId}") {
+                    navController.navigate(NavRoutes.Cards.route + "/${card.deckId}") {
                         popUpTo(NavRoutes.Home.route)
                     }
                 },

@@ -1,14 +1,15 @@
 <resources>
-    <string name="app_name">Cards</string>
+    <string name="app_name">CardsStudy</string>
+    <string name="cards">Cards</string>
     <string name="deck_name">Deck name</string>
     <string name="quality">Quality</string>
     <string name="easiness">Easiness</string>
     <string name="repetitions">Repetitions</string>
-    <string name="cards_left">Number of cards left</string>
+    <string name="cards_left">Cards left</string>
     <string name="no_cards">There are no more cards to study</string>
     <string name="view_answer">View Answer</string>
     <string name="add_card_button_title">Accept</string>
-    <string name="list_cards">LIST OF CARDS OF </string>
+    <string name="list_cards">LIST OF CARDS OF</string>
     <string name="list_decks">LIST OF DECKS</string>
     <string name="easy">Easy</string>
     <string name="medium">Medium</string>
@@ -34,7 +35,9 @@
     <string name="updateCard">Update Card</string>
     <string name="updateDeck">Update Deck</string>
     <string name="Login">Login / Create Account</string>
-    <string name="welcome">Welcome to Cards app</string>
+    <string name="welcome">Welcome to</string>
+    <string name="home">CardsStudy App</string>
     <string name="view">View your containers</string>
     <string name="noStatistics">There are no statistics since you have not studied any cards</string>
+    <string name="study">study time</string>
 </resources>

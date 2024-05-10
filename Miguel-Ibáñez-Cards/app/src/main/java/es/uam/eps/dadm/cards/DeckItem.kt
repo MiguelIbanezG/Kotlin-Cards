@@ -90,11 +90,11 @@ fun DeckItem(
                 text = buildAnnotatedString {
                     append("$numberOfCardsInEnglishDeck ")
                     withStyle(style = SpanStyle(color = Color.Black)) {
-                        append(context.getString(R.string.app_name))
+                        append(context.getString(R.string.cards))
                     }
                 },
                 onClick = {
-                    navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" +"/${deck.deckId}")
+                    navController.navigate(NavRoutes.Cards.route +"/${deck.deckId}")
                 },
                 style = TextStyle(
                     fontSize = 16.sp,
@@ -107,7 +107,7 @@ fun DeckItem(
                 contentDescription = "List",
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Cards.route}" +"/${deck.deckId}")
+                        navController.navigate(NavRoutes.Cards.route +"/${deck.deckId}")
                     }
                     .padding(start = 20.dp).size(34.dp).fillMaxWidth()
 
@@ -143,8 +143,7 @@ fun DeckList(
             message,
             Toast.LENGTH_SHORT
         ).show()
-        // navController.navigate(NavRoutes.DeckEditor.route + "/${deck.deckId}")
-        navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.DeckEditor.route}" + "/${deck.deckId}")
+        navController.navigate(NavRoutes.DeckEditor.route + "/${deck.deckId}")
     }
 
     LazyColumn(
@@ -181,12 +180,13 @@ fun DeleteOrOpenDeck(navController: NavController, viewModel: CardViewModel, dec
     LaunchedEffect(state.currentValue) {
         when (state.currentValue) {
             SwipeToDismissBoxValue.StartToEnd -> {
+                viewModel.deleteCardsByIds(decks.deckId)
                 viewModel.deleteDeckById(decks.deckId)
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}")
+                navController.navigate(NavRoutes.Decks.route)
             }
             SwipeToDismissBoxValue.EndToStart -> {
                 viewModel.deleteDeckById(decks.deckId)
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}")
+                navController.navigate(NavRoutes.Decks.route)
             }
             else -> Unit
         }
@@ -234,7 +234,7 @@ fun DeckEditor(navController: NavController ,viewModel: CardViewModel, deckId: S
         InnerDeckEditor(
             navController = navController,
             viewModel = viewModel,
-            deck = Deck( "adding deck", name = "", description = "", userId = viewModel.userId))
+            deck = Deck( deckId = "adding deck", name = "", description = "", userId = viewModel.userId))
     else {
         val deck by viewModel.getDeck(deckId).observeAsState(null)
         deck?.let {
@@ -307,7 +307,7 @@ fun InnerDeckEditor(navController: NavController ,viewModel: CardViewModel, deck
                 } else
                     viewModel.updateDeck(deck = deck)
 
-                navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}"){
+                navController.navigate(NavRoutes.Decks.route){
                     popUpTo(NavRoutes.Home.route)
                 }
             }
@@ -325,7 +325,7 @@ fun InnerDeckEditor(navController: NavController ,viewModel: CardViewModel, deck
                 onClick = {
                     val message = "${deck.name} " + context.getString(R.string.edit_cancel)
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}")
+                    navController.navigate(NavRoutes.Decks.route)
                 },
                 colors = ButtonDefaults.buttonColors(Color.Black),
             ) {

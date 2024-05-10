@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tarjetas</string>
+    <string name="app_name">CardsStudy</string> //nombre no lo traduzco
     <string name="deck_name">Nombre del Contenedor</string>
+    <string name="cards">Tarjetas</string>
     <string name="quality">Calidad</string>
     <string name="easiness">Facilidad</string>
     <string name="repetitions">Repeticiones</string>
-    <string name="cards_left">Numero de cartas restantes</string>
-    <string name="no_cards">No quedan cartas por estudiar</string>
+    <string name="cards_left">Tarjetas restantes</string>
+    <string name="no_cards">No quedan tarjetas por estudiar</string>
     <string name="view_answer">Ver Respuesta</string>
     <string name="add_card_button_title">Aceptar</string>
-    <string name="list_cards">LISTA DE CARTAS DE </string>
+    <string name="list_cards">LISTA DE TARJETAS DE</string>
     <string name="list_decks">LISTA DE MAZOS</string>
     <string name="easy">Fácil</string>
     <string name="medium">Medio</string>
     <string name="hard">Difícil</string>
-    <string name="question">Pregunta de la carta</string>
-    <string name="answer">Respuesta de la carta</string>
+    <string name="question">Pregunta de la tarjeta</string>
+    <string name="answer">Respuesta de la tarjeta</string>
     <string name="cancel">Cancelar</string>
     <string name="edit_cancel">Edición cancelada</string>
     <string name="description">Descripción</string>
@@ -26,16 +27,18 @@
     <string name="title_activity_settings">Ajustes</string>
     <string name="create">Crear Cuenta</string>
     <string name="decks">Mazos</string>
-    <string name="max_cards">Máximo numero de cartas</string>
+    <string name="max_cards">Máximo numero de tarjetas</string>
     <string name="board_title">Mostrar tablero</string>
     <string name="board_summary_on">Tablero disponible</string>
     <string name="board_summary_off">Tablero no disponible</string>
-    <string name="addCard">Añadir Carta</string>
+    <string name="addCard">Añadir Tarjeta</string>
     <string name="addDeck">Añadir Mazo</string>
-    <string name="updateCard">Actualizar Carta</string>
+    <string name="updateCard">Actualizar Tarjeta</string>
     <string name="updateDeck">Actualizar Mazo</string>
-    <string name="Login">Entrar / Crear Cuenta</string>ç
-    <string name="welcome">Bienvenido a la Aplicación de Cartas</string>
+    <string name="Login">Entrar / Crear Cuenta</string>
+    <string name="welcome">Bienvenido a la Aplicación </string>
+    <string name="home"> CardsStudy</string>
     <string name="view">Ver Mazos</string>
     <string name="noStatistics">No hay estadísticas ya que no has estudiado ninguna carta</string>
+    <string name="study">Hora de estudio</string>
 </resources>

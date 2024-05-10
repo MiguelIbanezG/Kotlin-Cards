@@ -1,6 +1,7 @@
 package es.uam.eps.dadm.cards
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -61,7 +63,7 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
         topBar = {
             CenterAlignedTopAppBar(title = {
                 Text(
-                    text = "Cards",
+                    context.getString(R.string.app_name),
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
@@ -87,7 +89,11 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                         imageVector = Icons.Filled.KeyboardArrowUp,
                         modifier = Modifier
                             .clickable {
-                                cards?.let { viewModel.uploadToFirebase(it) }
+                                cards?.let { cards ->
+                                    decks?.let { decks ->
+                                        viewModel.uploadToFirebase(cards, decks)
+                                    }
+                                }
                             }
                             .padding(8.dp),
                         tint = MaterialTheme.colorScheme.onPrimary,
@@ -124,12 +130,10 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                     onClick = {
                         if (currentRoute == NavRoutes.Decks.route) {
                             val idDeck = "adding deck"
-                            val routeDeck = NavRoutes.CardScaffold.route + "/${NavRoutes.DeckEditor.route}" + "/${idDeck}"
-                            navController.navigate(routeDeck)
+                            navController.navigate(NavRoutes.DeckEditor.route + "/${idDeck}")
                         } else {
                             val id = "adding card"
-                            val route = NavRoutes.CardScaffold.route + "/${NavRoutes.CardEditor.route}" + "/${id}" + "/${deckId}"
-                            navController.navigate(route)
+                            navController.navigate(NavRoutes.CardEditor.route + "/${id}" + "/${deckId}")
                         }
                     },
                     containerColor = Color.Black
@@ -152,14 +156,25 @@ fun CardBottomNavigationBar(navController: NavController) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
-    NavigationBar {
+    NavigationBar( containerColor = Color.Black, contentColor = Color.White) {
         NavBarItems.BarItems.forEach { navItem ->
+            val isSelected = currentRoute == navItem.route
             NavigationBarItem(
                 selected = currentRoute == navItem.route,
-                onClick = {
+                colors = NavigationBarItemColors(
+                    selectedIconColor = Color.Transparent,
+                    selectedTextColor = Color.Transparent,
+                    selectedIndicatorColor = Color.White,
+                    unselectedIconColor = Color.Transparent,
+                    unselectedTextColor = Color.Transparent,
+                    disabledIconColor = Color.Transparent,
+                    disabledTextColor = Color.Transparent
+                ),
+
+                        onClick = {
                     navController.navigate(navItem.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+
                         }
                         launchSingleTop = true
                         restoreState = true
@@ -169,10 +184,11 @@ fun CardBottomNavigationBar(navController: NavController) {
                     Icon(
                         imageVector = navItem.image,
                         contentDescription = navItem.title,
-                        tint = Color.Black
+                        tint = if (isSelected) Color.Black else Color.White
                     )
                 },
-                label = { Text(text = navItem.title, color = Color.Black) }
+                label = { Text(text = navItem.title, color = Color.White)
+                },
             )
         }
     }

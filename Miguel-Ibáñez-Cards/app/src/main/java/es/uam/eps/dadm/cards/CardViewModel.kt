@@ -61,6 +61,12 @@ class CardViewModel(application: Application) : ViewModel() {
         nDueCards = cards.map { cards -> cards.count { card -> card.isDue(LocalDateTime.now()) } }
     }
 
+    fun deleteCardsByIds(deckId: String) {
+        viewModelScope.launch {
+            cardDao.deleteCardsByIds(deckId)
+        }
+    }
+
     fun addCard(card: Card) = viewModelScope.launch {
         cardDao.addCard(card)
     }
@@ -69,7 +75,7 @@ class CardViewModel(application: Application) : ViewModel() {
         cardDao.addReview(review)
     }
 
-    private fun deleteCards() = viewModelScope.launch {
+    fun deleteCards() = viewModelScope.launch {
         cardDao.deleteCards()
     }
 
@@ -114,24 +120,28 @@ class CardViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun uploadToFirebase(cards: List<Card>) {
+    fun uploadToFirebase(cards: List<Card>, decks: List<Deck>) {
         val reference = FirebaseDatabase.getInstance().getReference("cards")
+        val reference2 = FirebaseDatabase.getInstance().getReference("decks")
         reference.setValue(null)
+        reference2.setValue(null)
         cards.forEach { reference.child(it.id).setValue(it) }
+        decks.forEach { reference2.child(it.deckId).setValue(it) }
     }
 
     fun downloadFromFirebase() {
         val reference = FirebaseDatabase.getInstance().getReference("cards")
-        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+        val reference2 = FirebaseDatabase.getInstance().getReference("decks")
+        reference2.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val cards = mutableListOf<Card>()
+                val decks = mutableListOf<Deck>()
                 snapshot.children.forEach { it ->
-                    it.getValue(Card::class.java)?.let {
-                        cards.add(it)
+                    it.getValue(Deck::class.java)?.let {
+                        decks.add(it)
                     }
                 }
                 viewModelScope.launch {
-                    cardDao.insertCards(cards)
+                    cardDao.insertDecks(decks)
                 }
             }
 

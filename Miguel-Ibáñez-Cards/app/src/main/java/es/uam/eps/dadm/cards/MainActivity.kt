@@ -39,10 +39,7 @@ class MainActivity : ComponentActivity() {
 
         reference.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Toast.makeText(
-                    applicationContext,
-                    snapshot.value.toString(),
-                    Toast.LENGTH_SHORT).show()
+
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -95,30 +92,30 @@ class MainActivity : ComponentActivity() {
             composable(NavRoutes.Study.route) {
                 CardScaffold(viewModel, navController, currentRoute =  NavRoutes.Study.route)
             }
-            composable(NavRoutes.CardScaffold.route + "/{currentRoute}" + "/{deckId}") { backEntry ->
+            composable(NavRoutes.Cards.route + "/{deckId}") { backEntry ->
                 val deckId = backEntry.arguments?.getString("deckId")
-                val currentRoute = backEntry.arguments?.getString("currentRoute") // Obtener currentRoute
                 deckId?.let { deckId ->
-                    currentRoute?.let { currentRoute ->
-                        CardScaffold(viewModel, navController, deckId, currentRoute =  currentRoute)
-                    }
+                    CardScaffold(viewModel, navController, deckId, currentRoute =  NavRoutes.Cards.route)
                 }
             }
-
-            composable(NavRoutes.CardScaffold.route + "/{currentRoute}" + "/{cardId}" + "/{deckId}") { backEntry ->
+            composable(NavRoutes.DeckEditor.route + "/{deckId}") { backEntry ->
+                val deckId = backEntry.arguments?.getString("deckId")
+                deckId?.let { deckId ->
+                    CardScaffold(viewModel, navController, deckId, currentRoute =  NavRoutes.DeckEditor.route)
+                }
+            }
+            composable(NavRoutes.CardEditor.route + "/{cardId}" + "/{deckId}") { backEntry ->
                 val deckId = backEntry.arguments?.getString("deckId")
                 val cardId = backEntry.arguments?.getString("cardId")
-                val currentRoute = backEntry.arguments?.getString("currentRoute") // Obtener currentRoute
+
                 deckId?.let { deckId ->
-                    currentRoute?.let { currentRoute ->
-                        cardId?.let { cardId ->
-                            CardScaffold(viewModel, navController, deckId = deckId, currentRoute =  currentRoute, cardId = cardId)
-                        }
+                    cardId?.let { cardId ->
+                        CardScaffold(viewModel, navController, deckId = deckId, currentRoute =  NavRoutes.CardEditor.route, cardId = cardId)
                     }
                 }
             }
             composable(NavRoutes.CardScaffold.route + "/{currentRoute}") { backEntry ->
-                val currentRoute = backEntry.arguments?.getString("currentRoute") // Obtener currentRoute
+                val currentRoute = backEntry.arguments?.getString("currentRoute")
                 currentRoute?.let { currentRoute ->
                     CardScaffold(viewModel, navController, currentRoute =  currentRoute)
                 }

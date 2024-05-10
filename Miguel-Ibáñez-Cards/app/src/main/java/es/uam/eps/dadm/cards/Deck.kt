@@ -7,9 +7,11 @@ import java.util.UUID
 
 @Entity(tableName = "decks_table")
 data class Deck(
-    @PrimaryKey
-    var deckId: String = UUID.randomUUID().toString(),
     var name: String,
     var description: String,
+    @PrimaryKey
+    var deckId: String = UUID.randomUUID().toString(),
     val userId: String = UUID.randomUUID().toString(),
-)
+){
+    constructor() : this("", "")
+}

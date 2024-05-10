@@ -17,12 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 
 @Composable
 fun Home(navController: NavController, viewModel: CardViewModel) {
@@ -35,6 +37,7 @@ fun Home(navController: NavController, viewModel: CardViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Text(stringResource(id = R.string.welcome),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -43,13 +46,26 @@ fun Home(navController: NavController, viewModel: CardViewModel) {
                 fontSize = 22.sp,
                 color = Color.Black)
 
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(stringResource(id = R.string.home),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontFamily =  FontFamily.Serif,
+                fontSize = 30.sp,
+                color = Color.Black)
+
             Spacer(modifier = Modifier.height(30.dp))
             Button(
                 onClick = {
                     if (viewModel.userId == "unknown user") {
                         navController.navigate(NavRoutes.Login.route)
                     } else {
-                        navController.navigate(NavRoutes.CardScaffold.route + "/${NavRoutes.Decks.route}")
+                        navController.navigate(NavRoutes.Decks.route, NavOptions.Builder()
+                            .setEnterAnim(R.anim.slide_in_right)
+                            .setExitAnim(R.anim.slide_out_left)
+                            .build())
                     }
                 },
                 modifier = Modifier

@@ -27,6 +27,9 @@ interface CardDao {
     @Query("SELECT * FROM decks_table WHERE deckId = :deckId")
     fun getDeck(deckId: String) : LiveData<Deck>
 
+    @Query("DELETE FROM cards_table WHERE deckId = :deckId")
+    suspend fun deleteCardsByIds(deckId: String)
+
     @Insert
     suspend fun addCard(card: Card)
 
@@ -65,6 +68,9 @@ interface CardDao {
 
     @Insert
     suspend fun insertCards(cards: List<Card>)
+
+    @Insert
+    suspend fun insertDecks(decks: List<Deck>)
 
     @Query("SELECT * FROM cards_table WHERE userId = :userId")
     fun getCardsFromUser(userId: String): LiveData<List<Card>>

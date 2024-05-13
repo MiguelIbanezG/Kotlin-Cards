@@ -1,6 +1,7 @@
 package es.uam.eps.dadm.cards
 
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -27,9 +28,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,8 +91,9 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
             ),
             actions = {
                 Row {
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowUp,
+                    Image(
+                        painter = painterResource(R.drawable.baseline_cloud_upload_24),
+                        contentDescription = "Upload from Firebase",
                         modifier = Modifier
                             .clickable {
                                 cards?.let { cards ->
@@ -96,18 +103,17 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
                                 }
                             }
                             .padding(8.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = "Download from Firebase",
+                        colorFilter = ColorFilter.tint(Color.White)
                     )
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
+                    Image(
+                        painter = painterResource(R.drawable.baseline_cloud_download_24),
+                        contentDescription = "Download from Firebase",
                         modifier = Modifier
                             .clickable {
                                 viewModel.downloadFromFirebase()
                             }
                             .padding(8.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        contentDescription = "Download from Firebase",
+                        colorFilter = ColorFilter.tint(Color.White)
                     )
                     Icon(
                         imageVector = Icons.Filled.ExitToApp,

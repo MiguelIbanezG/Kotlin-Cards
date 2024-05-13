@@ -149,6 +149,24 @@ class CardViewModel(application: Application) : ViewModel() {
                 TODO("Not yet implemented")
             }
         })
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val cards = mutableListOf<Card>()
+                snapshot.children.forEach { it ->
+                    it.getValue(Card::class.java)?.let {
+                        cards.add(it)
+                    }
+                }
+                viewModelScope.launch {
+                    cardDao.insertCards(cards)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
 
 

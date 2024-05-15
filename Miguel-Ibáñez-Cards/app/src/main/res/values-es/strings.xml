@@ -41,4 +41,6 @@
     <string name="view">Ver Mazos</string>
     <string name="noStatistics">No hay estadísticas ya que no has estudiado ninguna carta</string>
     <string name="study">Hora de estudio</string>
+    <string name="study2">Estudio</string>
+    <string name="Statistics">Estadísticas</string>
 </resources>

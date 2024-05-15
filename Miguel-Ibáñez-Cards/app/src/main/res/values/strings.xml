@@ -40,4 +40,6 @@
     <string name="view">View your containers</string>
     <string name="noStatistics">There are no statistics since you have not studied any cards</string>
     <string name="study">study time</string>
+    <string name="study2">Study</string>
+    <string name="Statistics">Statistics</string>
 </resources>

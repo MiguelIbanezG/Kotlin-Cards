@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
         val reference = database.getReference("message")
         reference.setValue("Hello from Cards")
+        NavBarItems.initialize(this)
 
         PreferenceManager.setDefaultValues(
             this,

@@ -42,4 +42,5 @@
     <string name="study">study time</string>
     <string name="study2">Study</string>
     <string name="Statistics">Statistics</string>
+        <string name="no">No</string>
 </resources>

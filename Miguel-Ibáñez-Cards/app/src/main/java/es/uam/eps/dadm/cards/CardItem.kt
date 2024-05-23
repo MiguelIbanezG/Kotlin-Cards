@@ -81,7 +81,7 @@ fun CardItem(
         )
     }
 }
-//Fix this
+
 @Composable
 fun CardData(
     card: Card,

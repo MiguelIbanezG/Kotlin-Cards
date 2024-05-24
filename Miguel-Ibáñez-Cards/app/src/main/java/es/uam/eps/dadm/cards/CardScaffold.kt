@@ -157,6 +157,8 @@ fun CardScaffold(viewModel: CardViewModel, navController: NavController, deckId:
         }
     )
 }
+
+//Fix that
 @Composable
 fun CardBottomNavigationBar(navController: NavController) {
     val backStackEntry by navController.currentBackStackEntryAsState()

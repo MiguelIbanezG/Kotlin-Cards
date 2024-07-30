@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import java.util.UUID
 
-
+//one try
 @Composable
 fun CardItem(
     card: Card,
